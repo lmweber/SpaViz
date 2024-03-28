@@ -229,7 +229,7 @@ plotSpots <- function(spe, x_coord = NULL, y_coord = NULL,
         colors <- colorRampPalette(
           colors = rev(x = brewer.pal(n = 11, name = "Spectral")))(100)
         scale_color_gradientn(
-          colors = colorRampPalette(colors = colors), 
+          colors = colors, 
           limits = range(df[[annotate]]))
       } else {
         scale_color_gradient(low = pal[1], high = pal[2])
