@@ -36,14 +36,14 @@
 #'   continuous. For a discrete variable (e.g. cluster labels), this should be
 #'   the name of a column in \code{colData} containing a character vector or
 #'   factor. For a continuous variable (e.g. a gene name), this should be an
-#'   entry in the column 'feature_col' in \code{rowData}. Default = NULL.
+#'   entry in \code{feature_col}. Default = NULL.
 #' 
 #' @param feature_col Name of column in \code{rowData} containing names of
-#'   continuous features to plot (e.g. gene names). This argument is used if
-#'   \code{annotate} is a continuous variable. (Alternatively, if \code{rowData}
-#'   is empty, the names of the continuous features will be obtained from the
-#'   \code{rownames} of \code{assay} \code{assay_name} instead.) Default =
-#'   "gene_name".
+#'   continuous features to plot (e.g. gene names). For example, set to
+#'   \code{feature_col = "gene_name"} if gene names are stored in a column named
+#'   \code{"gene_name"}. This argument is used if \code{annotate} is a
+#'   continuous variable. Default = NULL, in which case the row names of the
+#'   input object will be used.
 #' 
 #' @param assay_name Name of \code{assay} in input object containing values to
 #'   plot for a continuous variable. Default = "counts".
@@ -114,7 +114,7 @@
 #' 
 plotSpots <- function(spe, x_coord = NULL, y_coord = NULL, 
                       sample_id = NULL, in_tissue = "in_tissue", 
-                      annotate = NULL, feature_col = "gene_name", 
+                      annotate = NULL, feature_col = NULL, 
                       assay_name = "counts", 
                       pal = NULL, point_size = 0.3, 
                       legend_position = "right", 
@@ -128,12 +128,15 @@ plotSpots <- function(spe, x_coord = NULL, y_coord = NULL,
     stopifnot(is.character(in_tissue))
   }
   
-  # names of continuous features
-  if (ncol(rowData(spe)) == 0) {
-    stopifnot(is.character(assay_name))
-    feature_names <- rownames(assay(spe, assay_name))
-  } else if (ncol(rowData(spe)) > 1) {
-    feature_names <- rowData(spe)[, feature_col]
+  # get names of continuous features
+  if (is.null(feature_col)) {
+    feature_names <- rownames(spe)
+  } else {
+    if (ncol(rowData(spe)) == 0) {
+      feature_names <- rownames(spe)
+    } else if (ncol(rowData(spe)) > 1) {
+      feature_names <- rowData(spe)[, feature_col]
+    }
   }
   
   if (!is.null(annotate)) {
@@ -141,7 +144,7 @@ plotSpots <- function(spe, x_coord = NULL, y_coord = NULL,
     if (!(annotate %in% c(colnames(colData(spe)), feature_names))) {
       stop("'annotate' should be either (i) the name of a column in colData ", 
            "or (ii) an entry in either a column named 'feature_col' in ", 
-           "rowData or the rownames of the assay named 'assay_name'")
+           "rowData or the rownames of the input object")
     }
   }
   

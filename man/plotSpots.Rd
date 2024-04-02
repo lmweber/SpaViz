@@ -11,7 +11,7 @@ plotSpots(
   sample_id = NULL,
   in_tissue = "in_tissue",
   annotate = NULL,
-  feature_col = "gene_name",
+  feature_col = NULL,
   assay_name = "counts",
   pal = NULL,
   point_size = 0.3,
@@ -54,14 +54,14 @@ argument is provided, only spots over tissue will be shown. Default =
 continuous. For a discrete variable (e.g. cluster labels), this should be
 the name of a column in \code{colData} containing a character vector or
 factor. For a continuous variable (e.g. a gene name), this should be an
-entry in the column 'feature_col' in \code{rowData}. Default = NULL.}
+entry in \code{feature_col}. Default = NULL.}
 
 \item{feature_col}{Name of column in \code{rowData} containing names of
-continuous features to plot (e.g. gene names). This argument is used if
-\code{annotate} is a continuous variable. (Alternatively, if \code{rowData}
-is empty, the names of the continuous features will be obtained from the
-\code{rownames} of \code{assay} \code{assay_name} instead.) Default =
-"gene_name".}
+continuous features to plot (e.g. gene names). For example, set to
+\code{feature_col = "gene_name"} if gene names are stored in a column named
+\code{"gene_name"}. This argument is used if \code{annotate} is a
+continuous variable. Default = NULL, in which case the row names of the
+input object will be used.}
 
 \item{assay_name}{Name of \code{assay} in input object containing values to
 plot for a continuous variable. Default = "counts".}
