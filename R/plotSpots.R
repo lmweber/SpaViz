@@ -36,12 +36,12 @@
 #'   continuous. For a discrete variable (e.g. cluster labels), this should be
 #'   the name of a column in \code{colData} containing a character vector or
 #'   factor. For a continuous variable (e.g. a gene name), this should be an
-#'   entry in \code{feature_col}. Default = NULL.
+#'   entry in \code{feature_names}. Default = NULL.
 #' 
-#' @param feature_col Name of column in \code{rowData} containing names of
+#' @param feature_names Name of column in \code{rowData} containing names of
 #'   continuous features to plot (e.g. gene names). For example, set to
-#'   \code{feature_col = "gene_name"} if gene names are stored in a column named
-#'   \code{"gene_name"}. This argument is used if \code{annotate} is a
+#'   \code{feature_names = "gene_name"} if gene names are stored in a column
+#'   named \code{"gene_name"}. This argument is used if \code{annotate} is a
 #'   continuous variable. Default = NULL, in which case the row names of the
 #'   input object will be used.
 #' 
@@ -110,11 +110,11 @@
 #' 
 #' # continuous annotations
 #' spe <- Visium_mouseCoronal()
-#' plotSpots(spe, annotate = "Gapdh")
+#' plotSpots(spe, annotate = "Gapdh", feature_names = "gene_name")
 #' 
 plotSpots <- function(spe, x_coord = NULL, y_coord = NULL, 
                       sample_id = NULL, in_tissue = "in_tissue", 
-                      annotate = NULL, feature_col = NULL, 
+                      annotate = NULL, feature_names = NULL, 
                       assay_name = "counts", 
                       pal = NULL, point_size = 0.3, 
                       legend_position = "right", 
@@ -129,21 +129,21 @@ plotSpots <- function(spe, x_coord = NULL, y_coord = NULL,
   }
   
   # get names of continuous features
-  if (is.null(feature_col)) {
-    feature_names <- rownames(spe)
+  if (is.null(feature_names)) {
+    feature_nms <- rownames(spe)
   } else {
     if (ncol(rowData(spe)) == 0) {
-      feature_names <- rownames(spe)
+      feature_nms <- rownames(spe)
     } else if (ncol(rowData(spe)) > 1) {
-      feature_names <- rowData(spe)[, feature_col]
+      feature_nms <- rowData(spe)[, feature_names]
     }
   }
   
   if (!is.null(annotate)) {
     stopifnot(is.character(annotate))
-    if (!(annotate %in% c(colnames(colData(spe)), feature_names))) {
+    if (!(annotate %in% c(colnames(colData(spe)), feature_nms))) {
       stop("'annotate' should be either (i) the name of a column in colData ", 
-           "or (ii) an entry in either a column named 'feature_col' in ", 
+           "or (ii) an entry in either a column named 'feature_names' in ", 
            "rowData or the rownames of the input object")
     }
   }
@@ -173,9 +173,9 @@ plotSpots <- function(spe, x_coord = NULL, y_coord = NULL,
   
   if (!is.null(annotate)) {
     # continuous annotation values
-    if (annotate %in% feature_names) {
+    if (annotate %in% feature_nms) {
       stopifnot(is.character(assay_name))
-      ix <- which(feature_names == annotate)
+      ix <- which(feature_nms == annotate)
       df[[annotate]] <- assay(spe, assay_name)[ix, ]
     }
     # discrete annotation values

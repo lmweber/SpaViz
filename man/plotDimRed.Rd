@@ -8,7 +8,7 @@ plotDimRed(
   spe,
   plot_type = c("UMAP", "PCA"),
   annotate = NULL,
-  feature_col = NULL,
+  feature_names = NULL,
   assay_name = "counts",
   update_dimnames = TRUE,
   pal = NULL,
@@ -31,12 +31,12 @@ Default = "UMAP".}
 continuous. For a discrete variable (e.g. cluster labels), this should be
 the name of a column in \code{colData} containing a character vector or
 factor. For a continuous variable (e.g. a gene name), this should be an
-entry in \code{feature_col}. Default = NULL.}
+entry in \code{feature_names}. Default = NULL.}
 
-\item{feature_col}{Name of column in \code{rowData} containing names of
+\item{feature_names}{Name of column in \code{rowData} containing names of
 continuous features to plot (e.g. gene names). For example, set to
-\code{feature_col = "gene_name"} if gene names are stored in a column named
-\code{"gene_name"}. This argument is used if \code{annotate} is a
+\code{feature_names = "gene_name"} if gene names are stored in a column
+named \code{"gene_name"}. This argument is used if \code{annotate} is a
 continuous variable. Default = NULL, in which case the row names of the
 input object will be used.}
 
