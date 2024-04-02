@@ -132,11 +132,9 @@ plotSpots <- function(spe, x_coord = NULL, y_coord = NULL,
   if (is.null(feature_names)) {
     feature_nms <- rownames(spe)
   } else {
-    if (ncol(rowData(spe)) == 0) {
-      feature_nms <- rownames(spe)
-    } else if (ncol(rowData(spe)) > 1) {
-      feature_nms <- rowData(spe)[, feature_names]
-    }
+    stopifnot(ncol(rowData(spe)) > 0)
+    stopifnot(feature_names %in% colnames(rowData(spe)))
+    feature_nms <- rowData(spe)[, feature_names]
   }
   
   if (!is.null(annotate)) {
